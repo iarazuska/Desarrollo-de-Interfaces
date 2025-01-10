@@ -1,2 +1,2 @@
 # Desarrollo-de-Interfaces
-Este repositorio tiene todo los ejercicios de qeu se han realiza en clase divididos en ramas diferentes 
+Este repositorio tiene todo los ejercicios de que se han realizado en clase divididos en ramas diferentes 
