@@ -1,33 +1,83 @@
+/* Estilos básicos para todo el cuerpo de la aplicación */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+.App {
+  background: white;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Lista de estudiantes */
 .student-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .student-item {
-    border-bottom: 1px solid #ccc;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .student-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .student-detail {
-    display: none;
-    margin-top: 10px;
-  }
-  
-  .student-detail.active {
-    display: block;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table th, .table td {
-    border: 1px solid #ccc;
-    padding: 8px;
-  }
+  list-style: none;
+  padding: 0;
+}
+
+.student-list li {
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.student-list li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Detalles del estudiante seleccionado */
+div.details-card {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+/* Encabezados dentro de la tarjeta de detalles */
+.details-card h2 {
+  margin-top: 0;
+}
+
+/* Estilos para párrafos en la tarjeta de detalles */
+.details-card p {
+  margin: 5px 0;
+  line-height: 1.5;
+}
+
+/* Utilizar una pequeña sombra para destacar la tarjeta de detalles */
+.details-card {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejorar la legibilidad del texto dentro de las tarjetas */
+.details-card p {
+  font-size: 16px;
+}
+
+/* Estilos para formularios y botones, si se añaden */
+input, button {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #5c67f2;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #4a54e1;
+}
