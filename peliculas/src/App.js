@@ -1,64 +1,91 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Navbar, Nav, NavDropdown, Card, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 
 function App() {
   const [peliculas, setPeliculas] = useState([]);
-  const [peliculasDestacadas, setPeliculasDestacadas] = useState(null);
+  const [categorias, setCategorias] = useState([]);
+  const [directores, setDirectores] = useState([]);
+  const [filtro, setFiltro] = useState([]);
 
   useEffect(() => {
-    fetch('/peliculas (1).json')
+    fetch('/peliculas (1).json')  
       .then(response => response.json())
       .then(data => {
         setPeliculas(data);
-        if (data.length > 0) {
-          setPeliculasDestacadas(data[0]);
-        }
+        //hacemos que las categorias sean unicas 
+        const allCategorias = data.flatMap(pelicula => 
+          typeof pelicula.categoria === 'string' ? pelicula.categoria.split(/,|\//) : pelicula.categoria
+        );
+        const categoriasUnicas = Array.from(new Set(allCategorias.map(cat => cat.trim()))); 
+        setCategorias(categoriasUnicas);
+
+        //sacamos los directores y que sean unicos 
+        const directoresUnicos = Array.from(new Set(data.map(pelicula => pelicula.director)));
+        setDirectores(directoresUnicos);
+        
+        //de primeras sacamos todas las pelis
+        setFiltro(data);  
       })
-      .catch(error => console.error('error en encontrar el json', error));
+      .catch(error => console.log('Error al cargar el JSON:', error));
   }, []);
 
+  const handleCategoria = (categoria) => {
+    const filtradas = peliculas.filter(pelicula => 
+      typeof pelicula.categoria === 'string' ? pelicula.categoria.includes(categoria) : pelicula.categoria.includes(categoria)
+    );
+    setFiltro(filtradas);
+  };
 
-
-  //selecionar la pelicula como destacada
-  const selecionarPeli = (pelicula) => {
-    setPeliculasDestacadas(pelicula);
+  const handleDirector = (director) => {
+    const filtradas = peliculas.filter(pelicula => pelicula.director === director);
+    setFiltro(filtradas);
   };
 
   return (
-    <div className="container mt-4">
-      <div className="row mb-4">
-        {peliculasDestacadas && (
-          <>
-            <div className="col-8">
-              <img src={peliculasDestacadas.foto} className="img-fluid" alt={peliculasDestacadas.titulo} />
-            </div>
-            <div className="col-4">
-              <h2>{peliculasDestacadas.titulo}</h2>
-              <p>Director: {peliculasDestacadas.director}</p>
-              <p>Actores: {peliculasDestacadas.actoresPrincipales.join(', ')}</p>
-              <p>{peliculasDestacadas.sinopsis}</p>
-            </div>
-          </>
-        )}
-      </div>
-      <div className="row">
-        {peliculas.map((pelicula, index) => (
-          <div className="col-md-4 mb-3" key={index}>
-            <div className="card">
-              <img src={pelicula.foto} className="card-img-top" alt={pelicula.titulo} />
-              <div className="card-body">
-                <h5 className="card-title">{pelicula.titulo}</h5>
-                <p className="card-text">Director: {pelicula.director}</p>
-                <p className="card-text">Actores: {pelicula.actoresPrincipales.join(', ')}</p>
-                <button className="btn btn-primary" onClick={() => alert(pelicula.sinopsis)}>Más</button>
-                <button className="btn btn-secondary" onClick={() => selecionarPeli(pelicula)}>Seleccionar</button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <>
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Container>
+          <Navbar.Brand href="#home">
+            <img src="/logo192.png" width="30" height="30" alt="Logo" />
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <NavDropdown title="Categorías" id="navbarScrollingDropdown">
+                {categorias.map((categoria, index) => (
+                  <NavDropdown.Item key={index} onClick={() => handleCategoria(categoria)}>
+                    {categoria}
+                  </NavDropdown.Item>
+                ))}
+              </NavDropdown>
+              <NavDropdown title="Directores" id="navbarScrollingDropdown">
+                {directores.map((director, index) => (
+                  <NavDropdown.Item key={index} onClick={() => handleDirector(director)}>
+                    {director}
+                  </NavDropdown.Item>
+                ))}
+              </NavDropdown>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <Container>
+        <Row xs={1} md={3} className="g-4">
+          {filtro.map((pelicula, idx) => (
+            <Col key={idx}>
+              <Card>
+                <Card.Img variant="top" src={pelicula.foto} />
+                <Card.Body>
+                  <Card.Title>{pelicula.titulo}</Card.Title>
+                  <Card.Text>{pelicula.sinopsis}</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </>
   );
 }
 
