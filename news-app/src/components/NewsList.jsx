@@ -1,38 +1,30 @@
-import { useState, useEffect } from "react"; // ✅ Elimina `React`
-import { useParams, useNavigate } from "react-router-dom";
-import { Button, Card } from "react-bootstrap";
+// src/components/NewsList.jsx
+import React, { useState, useEffect } from 'react'
+import { ListGroup } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
-const NewsDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [noticia, setNoticia] = useState(null);
+const NewsList = () => {
+  const [news, setNews] = useState([])
 
   useEffect(() => {
-    fetch("/noticias.json")
+    fetch('/noticias.json')
       .then((response) => response.json())
-      .then((data) => {
-        const noticiaEncontrada = data[parseInt(id, 10)]; 
-        if (noticiaEncontrada) {
-          setNoticia(noticiaEncontrada);
-        }
-      })
-      .catch((error) => console.error("Error al cargar noticia:", error));
-  }, [id]);
+      .then((data) => setNews(data))
+      .catch((error) => console.error('Error al cargar las noticias:', error))
+  }, [])
 
   return (
-    <Card>
-      <Card.Body>
-        <Card.Title>{noticia.titulo}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
-          {noticia.categoria} - {noticia.fecha} - {noticia.autor}
-        </Card.Subtitle>
-        <Card.Text>{noticia.contenido}</Card.Text>
-        <Button variant="primary" onClick={() => navigate("/")}>
-          Volver al listado
-        </Button>
-      </Card.Body>
-    </Card>
-  );
-};
+    <div>
+      <h1 className="mb-4">Listado de Noticias</h1>
+      <ListGroup>
+        {news.map((item, index) => (
+          <ListGroup.Item key={index}>
+            <Link to={`/news/${index}`}>{item.titulo}</Link>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </div>
+  )
+}
 
-export default NewsDetail;
+export default NewsList
